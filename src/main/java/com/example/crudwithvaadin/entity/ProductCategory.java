@@ -9,6 +9,6 @@ public class ProductCategory {
 
     @Id
     @GeneratedValue
-    private String id;
+    private long id;
     private String name;
 }
