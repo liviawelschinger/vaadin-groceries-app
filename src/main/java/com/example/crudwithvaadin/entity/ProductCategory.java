@@ -11,7 +11,6 @@ import javax.persistence.Id;
  * @author Livia Welschinger
  */
 @Entity
-@Data
 public class ProductCategory {
 
     @Id
@@ -32,5 +31,26 @@ public class ProductCategory {
      */
     public ProductCategory(String name) {
         this.name = name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductCategory{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

@@ -4,33 +4,57 @@ import com.example.crudwithvaadin.entity.ProductCategory;
 import com.example.crudwithvaadin.repository.ProductCategoryRepository;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
+import org.springframework.util.StringUtils;
+
+
 
 /**
  * MainView that shows the product categories
  */
-@Route
+@Route(value = "categories")
 public class MainView extends VerticalLayout {
 
     private final ProductCategoryRepository categoryRepository;
-    private Grid<ProductCategory> categoryGrid;
+    private final Grid<ProductCategory> categoryGrid;
+    private final TextField filter;
+    private Binder<ProductCategory> binder = new Binder<>(ProductCategory.class);
+
 
     /**
      * Constructor
      * @param categoryRepository ProductCategoryRepository
      */
     public MainView(ProductCategoryRepository categoryRepository) {
+
+
         this.categoryRepository = categoryRepository;
+        this.filter = new TextField();
+        filter.setPlaceholder("Filter category by name");
+        filter.setValueChangeMode(ValueChangeMode.EAGER);
+        filter.addValueChangeListener(event -> {
+            listProductCategories(event.getValue());
+        });
         this.categoryGrid = new Grid<>(ProductCategory.class); // Grid bound to the ProductCategory list
-        add(categoryGrid);
-        listProductCategories();
+        add(filter, categoryGrid);
+
+        // Initialize listing
+        listProductCategories(null);
 
     }
 
 
-    private void listProductCategories() {
-        // pass the list of entities from a constructor-injected ProductCategoryRepository to the Grid by using setItems()
-        categoryGrid.setItems(categoryRepository.findAll());
+    private void listProductCategories(String filterText) {
+        if(StringUtils.isEmpty(filterText)) {
+            categoryGrid.setItems(categoryRepository.findAll());
+        } else {
+            categoryGrid.setItems(categoryRepository.findByName(filterText));
+        }
+
+
     }
 
     /*
