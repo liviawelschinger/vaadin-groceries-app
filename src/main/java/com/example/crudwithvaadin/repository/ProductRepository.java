@@ -1,4 +1,10 @@
 package com.example.crudwithvaadin.repository;
 
-public interface ProductRepository {
+import com.example.crudwithvaadin.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+/**
+ * Repository for Product
+ */
+public interface ProductRepository extends JpaRepository<Product, Long> {
 }
