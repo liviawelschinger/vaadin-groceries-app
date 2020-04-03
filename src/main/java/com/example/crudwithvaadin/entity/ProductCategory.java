@@ -15,7 +15,7 @@ public class ProductCategory {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Long id; // use Long for later examiniation (null (not persited category) or not null (persisted category)) The Long class wraps a value of the primitive type long in an object. An object of type Long contains a single field whose type is long.
     private String name;
 
     /**
@@ -33,7 +33,7 @@ public class ProductCategory {
         this.name = name;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
