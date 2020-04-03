@@ -13,8 +13,6 @@ import com.vaadin.flow.router.Route;
 import org.springframework.util.StringUtils;
 import com.vaadin.flow.component.button.Button;
 
-import java.awt.*;
-
 
 /**
  * MainView that shows the product categories
@@ -22,61 +20,66 @@ import java.awt.*;
 @Route(value = "categories")
 public class MainView extends VerticalLayout {
 
-    private final ProductCategoryRepository categoryRepository;
-    private final Grid<ProductCategory> categoryGrid;
-    private final TextField filter;
-    private final  Button addNewBtn;
+    private final ProductCategoryRepository repo;
+
     private final ProductCategoryEditorForm editor;
 
-    /**
-     * Constructor
-     * @param categoryRepository ProductCategoryRepository
-     */
-    public MainView(ProductCategoryRepository categoryRepository, ProductCategoryEditorForm editor) {
+    final Grid<ProductCategory> grid;
 
-        this.categoryRepository = categoryRepository;
+    final TextField filter;
+
+    private final Button addNewBtn;
+
+    public MainView(ProductCategoryRepository repo, ProductCategoryEditorForm editor) {
+        this.repo = repo;
         this.editor = editor;
-
+        this.grid = new Grid<>(ProductCategory.class);
         this.filter = new TextField();
-        filter.setPlaceholder("Filter category by name");
-        filter.setValueChangeMode(ValueChangeMode.EAGER);
-        filter.addValueChangeListener(event -> {
-            listProductCategories(event.getValue());
-        });
-        this.addNewBtn = new Button("New customer", VaadinIcon.PLUS.create());
+        this.addNewBtn = new Button("New category", VaadinIcon.PLUS.create());
+
+        // build layout
         HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
+        add(actions, grid, editor);
 
-        this.categoryGrid = new Grid<>(ProductCategory.class); // Grid bound to the ProductCategory list
-        categoryGrid.setHeight("300px");
-        categoryGrid.setColumns("id", "name");
-        categoryGrid.getColumnByKey("id").setWidth("80px").setFlexGrow(0);
-        categoryGrid.asSingleSelect().addValueChangeListener(event -> {
-            editor.editProductCategory(event.getValue());
-                });
+        grid.setHeight("300px");
+        grid.setColumns("id", "name");
+        grid.getColumnByKey("id").setWidth("80px").setFlexGrow(0);
 
+        filter.setPlaceholder("Filter by name");
 
-        add(actions, categoryGrid);
+        // Hook logic to components
+
+        // Replace listing with filtered content when user changes filter
+        filter.setValueChangeMode(ValueChangeMode.EAGER);
+        filter.addValueChangeListener(e -> listProductCategory(e.getValue()));
+
+        // Connect selected Customer to editor or hide if none is selected
+        grid.asSingleSelect().addValueChangeListener(e -> {
+            editor.editProductCategory(e.getValue());
+        });
+
+        // Instantiate and edit new Customer the new button is clicked
+        addNewBtn.addClickListener(e -> editor.editProductCategory(new ProductCategory( "")));
+
+        // Listen changes made by the editor, refresh data from backend
+        editor.setChangeHandler(() -> {
+            editor.setVisible(false);
+            listProductCategory(filter.getValue());
+        });
 
         // Initialize listing
-        listProductCategories(null);
-
+        listProductCategory(null);
     }
 
-
-    private void listProductCategories(String filterText) {
-        if(StringUtils.isEmpty(filterText)) {
-            categoryGrid.setItems(categoryRepository.findAll());
-        } else {
-            categoryGrid.setItems(categoryRepository.findByName(filterText));
+    // tag::listCustomers[]
+    void listProductCategory(String filterText) {
+        if (StringUtils.isEmpty(filterText)) {
+            grid.setItems(repo.findAll());
         }
-
-
+        else {
+            grid.setItems(repo.findByName(filterText));
+        }
     }
-
-    /*
-    + Although Vaadin Grid lazy loads the data from the server to the browser, the preceding approach keeps the whole list of data in the server memory.
-        To save some memory, you could show only the topmost results by employing paging or providing a lazy loading data provider by using the
-        setDataProvider(DataProvider) method.
-     */
+    // end::listCustomers[]
 
 }

@@ -14,9 +14,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.beans.EventHandler;
-
-
 @SpringComponent
 // Spring-Vaadin integration, same as Spring @Component; Attention: Vaadin has own annotation @Component
 @UIScope // that spring beans of this class are created in the access area and with the lifespan of a Vaadin UI session.
