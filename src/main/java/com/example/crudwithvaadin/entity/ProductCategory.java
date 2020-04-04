@@ -1,15 +1,25 @@
 package com.example.crudwithvaadin.entity;
 
+import java.time.LocalDate;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Entity class for ProductCategory
  * @author Livia Welschinger
  */
+@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "category")
 public class ProductCategory {
@@ -17,51 +27,18 @@ public class ProductCategory {
     @Id
     @GeneratedValue
     private Long id; // use Long for later examiniation (null (not persited category) or not null (persisted category)) The Long class wraps a value of the primitive type long in an object. An object of type Long contains a single field whose type is long.
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "local_date")
+    private LocalDate localDate;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productCategory")
     private List<Product> productList = new ArrayList<>();
 
-    /**
-     * NoArgsConstructor
-     */
-    public ProductCategory() {
-
-    }
-
-    /**
-     * AllArgsConstructor
-     * @param name product category name
-     */
-    public ProductCategory(String name) {
+    public ProductCategory(String name, LocalDate localDate) {
         this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "category")
-    public List<Product> getProductList() {
-        return productList;
-    }
-
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
-    }
-
-    @Override
-    public String toString() {
-        return "ProductCategory{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        this.localDate = localDate;
     }
 }
