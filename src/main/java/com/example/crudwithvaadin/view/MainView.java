@@ -73,7 +73,7 @@ public class MainView extends VerticalLayout {
 
     // tag::listCustomers[]
     void listProductCategory(String filterText) {
-        if (StringUtils.isEmpty(filterText)) {
+        if (StringUtils.isEmpty(filterText) || repo.findByName(filterText) == null) {
             grid.setItems(repo.findAll());
         }
         else {
