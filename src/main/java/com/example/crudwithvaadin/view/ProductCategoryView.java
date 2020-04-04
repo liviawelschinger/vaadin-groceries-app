@@ -18,7 +18,7 @@ import com.vaadin.flow.component.button.Button;
  * MainView that shows the product categories
  */
 @Route(value = "categories")
-public class MainView extends VerticalLayout {
+public class ProductCategoryView extends VerticalLayout {
 
     private final ProductCategoryRepository repo;
 
@@ -30,7 +30,7 @@ public class MainView extends VerticalLayout {
 
     private final Button addNewBtn;
 
-    public MainView(ProductCategoryRepository repo, ProductCategoryEditorForm editor) {
+    public ProductCategoryView(ProductCategoryRepository repo, ProductCategoryEditorForm editor) {
         this.repo = repo;
         this.editor = editor;
         this.grid = new Grid<>(ProductCategory.class);
