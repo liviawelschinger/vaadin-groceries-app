@@ -2,6 +2,7 @@ package com.example.crudwithvaadin;
 
 import com.example.crudwithvaadin.entity.ProductCategory;
 import com.example.crudwithvaadin.repository.ProductCategoryRepository;
+import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -35,28 +36,21 @@ public class CrudWithVaadinApplication {
 	public CommandLineRunner loadData(ProductCategoryRepository categoryRepository) {
 		return (args) -> {
 			// save a couple of product categories
-			categoryRepository.save(new ProductCategory("Fruits"));
-			categoryRepository.save(new ProductCategory("Vegetables"));
-			categoryRepository.save(new ProductCategory("Meat"));
-			categoryRepository.save(new ProductCategory("Dairy Goods"));
+			LocalDate now = LocalDate.now();
+			categoryRepository.deleteAll();
+			categoryRepository.save(new ProductCategory("Fruits", now));
+			categoryRepository.save(new ProductCategory("Vegetables", now));
+			categoryRepository.save(new ProductCategory("Meat", now));
+			categoryRepository.save(new ProductCategory("Dairy Goods", now));
 
 			// fetch all categories
 			LOGGER.info("Categories found with findAll():");
 			LOGGER.info("--------");
 			for (ProductCategory category : categoryRepository.findAll()) {
-				LOGGER.info(category.toString());
+				LOGGER.info(category.getName());
 			}
 
-			// fetch an individual category by ID
-			ProductCategory category = categoryRepository.findById(1L).get();
-
-			LOGGER.info("Product category found with findOne(1L):");
-			LOGGER.info("--------------------------------");
-			LOGGER.info(category.toString());
-			LOGGER.info("");
-
-
+			LOGGER.info("Found category by name: " + categoryRepository.findByName("Fruits").getName());
 		};
 	}
-
 }
