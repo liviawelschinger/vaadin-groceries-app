@@ -2,27 +2,18 @@ package com.example.crudwithvaadin.entity;
 
 import java.time.LocalDate;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 
 /**
  * Entity class for Product
  */
-@Data
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
 @Table(name = "product")
 public class Product {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "name")
@@ -31,9 +22,72 @@ public class Product {
     @Column(name = "price")
     private double price;
 
+    @Column(name = "date_processed")
+    private LocalDate dateProcessed;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "productcategory_id", referencedColumnName = "id")
+    @JoinColumn(name = "category_id", referencedColumnName = "id") // reference SQL column name
     // @JsonIgnore
     private ProductCategory productCategory;
 
+    @Transient
+    private String categoryOption;
+
+    public Product() {
+
+    }
+    public Product(String name, double price, ProductCategory productCategory, String categoryOption) {
+        this.name = name;
+        this.price = price;
+        this.productCategory = productCategory;
+        this.categoryOption = categoryOption;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public LocalDate getDateProcessed() {
+        return dateProcessed;
+    }
+
+    public void setDateProcessed(LocalDate dateProcessed) {
+        this.dateProcessed = dateProcessed;
+    }
+
+    public ProductCategory getProductCategory() {
+        return productCategory;
+    }
+
+    public void setProductCategory(ProductCategory productCategory) {
+        this.productCategory = productCategory;
+    }
+
+    public String getCategoryOption() {
+        return categoryOption;
+    }
+
+    public void setCategoryOption(String categoryOption) {
+        this.categoryOption = categoryOption;
+    }
 }
