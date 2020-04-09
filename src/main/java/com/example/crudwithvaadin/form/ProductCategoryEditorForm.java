@@ -5,6 +5,7 @@ import com.example.crudwithvaadin.repository.ProductCategoryRepository;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -29,6 +30,9 @@ public class ProductCategoryEditorForm extends VerticalLayout implements KeyNoti
     /* Fields to edit properties in ProductCategory entity */
     TextField name = new TextField("Category name");
 
+    /* DatePicker */
+    DatePicker datum = new DatePicker("Datum");
+
     /* Action buttons */
     Button save = new Button("Save", VaadinIcon.CHECK.create());
     Button cancel = new Button("Cancel");
@@ -42,7 +46,7 @@ public class ProductCategoryEditorForm extends VerticalLayout implements KeyNoti
     public ProductCategoryEditorForm(ProductCategoryRepository repository) {
         this.repository = repository;
 
-        add(name, actions);
+        add(name, datum, actions);
 
         // bind using naming convention
         binder.bindInstanceFields(this);
