@@ -11,8 +11,7 @@ import org.springframework.data.repository.query.Param;
  */
 public interface ProductCategoryRepository extends JpaRepository<ProductCategory, Long> {
 
-     String QUERY_BY_NAME = "SELECT c FROM ProductCategory c WHERE c.name LIKE :name" + "%";
-
-     @Query(QUERY_BY_NAME)
+    // JPA-SQL: table name has to be exact the same like the name of the Java model class
+     @Query(value = "SELECT c FROM ProductCategory c WHERE c.name LIKE %:name%")
      ProductCategory findByName(@Param("name") String name);
 }
