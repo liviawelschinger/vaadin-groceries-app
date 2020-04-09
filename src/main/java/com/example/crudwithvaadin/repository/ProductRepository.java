@@ -13,6 +13,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // JPA-SQL: table name has to be exact the same like the name of the Java model class
     @Query(value = "SELECT c FROM Product c WHERE c.name LIKE %:name%")
-    ProductCategory findByName(@Param("name") String name);
+    Product findByName(@Param("name") String name);
 
 }
