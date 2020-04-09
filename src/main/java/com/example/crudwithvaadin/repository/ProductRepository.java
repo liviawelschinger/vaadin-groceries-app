@@ -1,6 +1,7 @@
 package com.example.crudwithvaadin.repository;
 
 import com.example.crudwithvaadin.entity.Product;
+import com.example.crudwithvaadin.entity.ProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,8 +11,8 @@ import org.springframework.data.repository.query.Param;
  */
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    String QUERY_BY_NAME = "SELECT p FROM Product p WHERE p.name LIKE :name" + "%";
+    // JPA-SQL: table name has to be exact the same like the name of the Java model class
+    @Query(value = "SELECT c FROM Product c WHERE c.name LIKE %:name%")
+    ProductCategory findByName(@Param("name") String name);
 
-    @Query(QUERY_BY_NAME)
-    Product findByName(@Param("name") String name);
 }
