@@ -10,6 +10,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
+import java.time.LocalDate;
 import org.springframework.util.StringUtils;
 import com.vaadin.flow.component.button.Button;
 
@@ -42,7 +43,7 @@ public class ProductCategoryView extends VerticalLayout {
         add(actions, grid, editor);
 
         grid.setHeight("300px");
-        grid.setColumns("id", "name");
+        grid.setColumns("id", "name", "dateProcessed"); // use names of the Java attributes here, not the SQL columns
         grid.getColumnByKey("id").setWidth("80px").setFlexGrow(0);
 
         filter.setPlaceholder("Filter by name");
@@ -59,7 +60,8 @@ public class ProductCategoryView extends VerticalLayout {
         });
 
         // Instantiate and edit new Customer the new button is clicked
-        addNewBtn.addClickListener(e -> editor.editProductCategory(new ProductCategory( "")));
+        addNewBtn.addClickListener(e -> editor.editProductCategory(new ProductCategory( "", LocalDate
+            .now())));
 
         // Listen changes made by the editor, refresh data from backend
         editor.setChangeHandler(() -> {
@@ -70,16 +72,13 @@ public class ProductCategoryView extends VerticalLayout {
         // Initialize listing
         listProductCategory(null);
     }
-
-    // tag::listCustomers[]
     void listProductCategory(String filterText) {
-        if (StringUtils.isEmpty(filterText) || repo.findByName(filterText) == null) {
+       if (StringUtils.isEmpty(filterText) || repo.findByName(filterText)  == null) {
             grid.setItems(repo.findAll());
         }
         else {
             grid.setItems(repo.findByName(filterText));
         }
+        repo.findAll();
     }
-    // end::listCustomers[]
-
 }
