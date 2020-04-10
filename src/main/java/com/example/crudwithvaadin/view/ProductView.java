@@ -1,7 +1,6 @@
 package com.example.crudwithvaadin.view;
 
 import com.example.crudwithvaadin.entity.Product;
-import com.example.crudwithvaadin.entity.ProductCategory;
 import com.example.crudwithvaadin.form.ProductEditorForm;
 import com.example.crudwithvaadin.repository.ProductCategoryRepository;
 import com.example.crudwithvaadin.repository.ProductRepository;
@@ -14,21 +13,27 @@ import com.vaadin.flow.component.textfield.TextField;
 
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+
+import java.time.LocalDate;
 
 
 @Route("products")
 public class ProductView extends VerticalLayout {
+
+    private static  final Logger LOGGER = LoggerFactory.getLogger(ProductView.class);
 
     private final ProductRepository repo;
     private final ProductCategoryRepository catRepo;
     private final ProductEditorForm editor;
 
 
-    private TextField filter = new TextField();
+    private TextField filter;
 
     private Button addNewBtn;
-    private Grid<Product> grid = new Grid<>(Product.class);
+    private Grid<Product> grid;
 
     public ProductView(ProductRepository repository, ProductCategoryRepository catRepo, ProductEditorForm editor) {
         this.repo = repository;
@@ -40,7 +45,7 @@ public class ProductView extends VerticalLayout {
 
         // build layout
         HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
-        add(actions, grid);
+        add(actions, grid, editor);
 
         grid.setHeight("300px");
         grid.setColumns("id", "price", "name", "dateProcessed", "productCategory.name");
@@ -59,15 +64,14 @@ public class ProductView extends VerticalLayout {
             editor.editProduct(e.getValue());
         });
 
-        // Instantiate and edit new Product the new button is clicked
-        ProductCategory categoryMeat = catRepo.findByName("meat");
 
-        Product product = new Product();
-        product.setName("Product1");
-        product.setPrice(9.99);
-        product.setProductCategory(categoryMeat);
 
-        addNewBtn.addClickListener(e -> editor.editProduct(product));
+         addNewBtn.addClickListener(event ->
+                 {
+                     LOGGER.info(">>> Add button clicked");
+                     editor.editProduct(new Product("Apple", 0.0, LocalDate.now(), catRepo.findByName("Fruits"), ""));
+                    }
+                 );
 
         // Listen changes made by the editor, refresh data from backend
         editor.setChangeHandler(() -> {
