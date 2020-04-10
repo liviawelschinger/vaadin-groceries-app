@@ -31,7 +31,6 @@ public class ProductView extends VerticalLayout {
     private Grid<Product> grid = new Grid<>(Product.class);
 
     public ProductView(ProductRepository repository, ProductCategoryRepository catRepo, ProductEditorForm editor) {
-
         this.repo = repository;
         this.catRepo = catRepo;
         this.editor = editor;
@@ -44,7 +43,7 @@ public class ProductView extends VerticalLayout {
         add(actions, grid);
 
         grid.setHeight("300px");
-        grid.setColumns("id", "price", "name");
+        grid.setColumns("id", "price", "name", "dateProcessed", "productCategory.name");
         grid.getColumnByKey("id").setWidth("80px").setFlexGrow(0);
 
         filter.setPlaceholder("Filter by name");
@@ -68,7 +67,7 @@ public class ProductView extends VerticalLayout {
         product.setPrice(9.99);
         product.setProductCategory(categoryMeat);
 
-      //  addNewBtn.addClickListener(e -> editor.editProduct(product));
+        addNewBtn.addClickListener(e -> editor.editProduct(product));
 
         // Listen changes made by the editor, refresh data from backend
         editor.setChangeHandler(() -> {
@@ -79,8 +78,6 @@ public class ProductView extends VerticalLayout {
         // Initialize listing
         listProducts(null);
         add(actions, grid);
-
-
     }
 
     // tag::listProducts[]
