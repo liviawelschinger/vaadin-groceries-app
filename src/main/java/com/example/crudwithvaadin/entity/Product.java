@@ -30,15 +30,17 @@ public class Product {
     // @JsonIgnore
     private ProductCategory productCategory;
 
+    // Not saved in database, for GUI purposes only
     @Transient
     private String categoryOption;
 
     public Product() {
 
     }
-    public Product(String name, double price, ProductCategory productCategory, String categoryOption) {
+    public Product(String name, double price, LocalDate dateProcessed, ProductCategory productCategory, String categoryOption) {
         this.name = name;
         this.price = price;
+        this.dateProcessed = dateProcessed;
         this.productCategory = productCategory;
         this.categoryOption = categoryOption;
     }
