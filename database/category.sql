@@ -1,0 +1,5 @@
+CREATE TABLE category (
+    id BIGINT(21) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30) NOT NULL,
+    date_processed DATE NOT NULL
+);
