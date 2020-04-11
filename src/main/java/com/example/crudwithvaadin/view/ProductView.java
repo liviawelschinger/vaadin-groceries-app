@@ -5,8 +5,11 @@ import com.example.crudwithvaadin.form.ProductEditorForm;
 import com.example.crudwithvaadin.repository.ProductCategoryRepository;
 import com.example.crudwithvaadin.repository.ProductRepository;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -45,7 +48,21 @@ public class ProductView extends VerticalLayout {
 
         // build layout
         HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
-        add(actions, grid, editor);
+
+        MenuBar menuBar = new MenuBar();
+        menuBar.setOpenOnHover(true);
+
+        // Menu tab View
+        MenuItem view = menuBar.addItem("View");
+
+        // Sub menu of View with navigation links
+        SubMenu viewSubMenu = view.getSubMenu();
+        // getSource gets the referred component
+        // getUI gets the UI this component is attached to.
+        viewSubMenu.addItem("Product categories", event -> event.getSource().getUI().ifPresent(ui -> ui.navigate("categories")));
+        viewSubMenu.addItem("Products", event -> event.getSource().getUI().ifPresent(ui -> ui.navigate("products")));
+
+        add(menuBar, actions, grid, editor);
 
         grid.setHeight("300px");
         grid.setColumns("id", "price", "name", "dateProcessed", "productCategory.name");
